@@ -1,16 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-const conn = "mongodb+srv://admin:admin@cluster0.w3n0vll.mongodb.net/?retryWrites=true&w=majority";
+const conn = process.env.conn;
 
-mongoose.connect(conn, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(conn);
 
 // Check if the connection was successful
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
+const dbb = mongoose.connection;
+dbb.on('error', console.error.bind(console, 'connection error:'));
+dbb.once('open', () => {
   console.log('Connected to MongoDB Atlas');
 });
