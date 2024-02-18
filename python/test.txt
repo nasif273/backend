@@ -1,0 +1,35 @@
+from flask import Flask, request, jsonify
+import os
+import openai
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all domains, adjust in production as necessary
+
+# Set your OpenAI API key from an environment variable for security
+openai.api_key = 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
+
+@app.route('/ask', methods=['POST'])
+def ask_question():
+    data = request.get_json()
+    question = data['question']
+
+    try:
+        # Adjusted to use a model compatible with openai 0.28
+        response = openai.Completion.create(
+            engine="davinci",  # This model should be available in openai 0.28
+            prompt=question,
+            temperature=0.5,
+            max_tokens=150,
+            top_p=1.0,
+            frequency_penalty=0.0,
+            presence_penalty=0.0
+        )
+        answer = response.choices[0].text.strip()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'answer': answer})
+
+if __name__ == '__main__':
+    app.run(debug=True)
